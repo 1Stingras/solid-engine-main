@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyCast Pro Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="gridForWeatherStats" id = "DailyContainer">
+        
+    </div>
+
+    <div class="ContainerForMainWeather" id = "HourlyContainer">
+       
+    </div>
+    
+    <script type="module">
+        const wmo_to_map_icon = {
+    "0": ["Clear", "Clear sky.", "01", "https://openweathermap.org/img/wn/01d@2x.png"],
+    "1": ["MainlyClear", "Mainly clear sky.", "02", "https://openweathermap.org/img/wn/02d@2x.png"],
+    "2": ["PartlyCloudy", "Partly cloudy sky.", "02", "https://openweathermap.org/img/wn/02d@2x.png"],
+    "3": ["Overcast", "Overcast sky.", "03", "https://openweathermap.org/img/wn/03d@2x.png"],
+    "45": ["Fog", "Foggy.", "50", "https://openweathermap.org/img/wn/50d@2x.png"],
+    "48": ["Fog", "Depositing rime fog.", "50", "https://openweathermap.org/img/wn/50d@2x.png"],
+    "51": ["Drizzle", "Light drizzle.", "10", "https://openweathermap.org/img/wn/10d@2x.png"],
+    "53": ["Drizzle", "Moderate drizzle.", "09", "https://openweathermap.org/img/wn/09d@2x.png"],
+    "55": ["Drizzle", "Dense drizzle.", "09", "https://openweathermap.org/img/wn/09d@2x.png"],
+    "56": ["FreezingDrizzle", "Light freezing drizzle.", "09", "https://openweathermap.org/img/wn/09d@2x.png"],
+    "57": ["FreezingDrizzle", "Dense freezing drizzle.", "09", "https://openweathermap.org/img/wn/09d@2x.png"],
+    "61": ["Rain", "Slight rain.", "10", "https://openweathermap.org/img/wn/10d@2x.png"],
+    "63": ["Rain", "Moderate rain.", "09", "https://openweathermap.org/img/wn/09d@2x.png"],
+    "65": ["Rain", "Heavy rain.", "09", "https://openweathermap.org/img/wn/09d@2x.png"],
+    "66": ["FreezingRain", "Light freezing rain.", "09", "https://openweathermap.org/img/wn/09d@2x.png"],
+    "67": ["FreezingRain", "Heavy freezing rain.", "09", "https://openweathermap.org/img/wn/09d@2x.png"],
+    "71": ["Snow", "Slight snow fall.", "13", "https://openweathermap.org/img/wn/13d@2x.png"],
+    "73": ["Snow", "Moderate snow fall.", "13", "https://openweathermap.org/img/wn/13d@2x.png"],
+    "75": ["Snow", "Heavy snow fall.", "13", "https://openweathermap.org/img/wn/13d@2x.png"],
+    "77": ["Snow", "Snow grains falling.", "13", "https://openweathermap.org/img/wn/13d@2x.png"],
+    "80": ["Rain", "Slight rain showers.", "10", "https://openweathermap.org/img/wn/10d@2x.png"],
+    "81": ["Rain", "Moderate rain showers.", "09", "https://openweathermap.org/img/wn/09d@2x.png"],
+    "82": ["Rain", "Violent rain showers.", "09", "https://openweathermap.org/img/wn/09d@2x.png"],
+    "85": ["Snow", "Slight snow showers.", "13", "https://openweathermap.org/img/wn/13d@2x.png"],
+    "86": ["Snow", "Heavy snow showers.", "13", "https://openweathermap.org/img/wn/13d@2x.png"],
+    "95": ["Thunderstorm", "Thunderstorm.", "11", "https://openweathermap.org/img/wn/11d@2x.png"],
+    "96": ["Thunderstorm", "Thunderstorm with slight hail.", "11", "https://openweathermap.org/img/wn/11d@2x.png"],
+    "99": ["Thunderstorm", "Thunderstorm with heavy hail.", "11", "https://openweathermap.org/img/wn/11d@2x.png"],
+};
+
+        const ContainerForMainHourly = document.getElementById("HourlyContainer")
+        const ContainerForDays = document.getElementById("DailyContainer")
+
+        async function GetJSON(url) {
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "User-Agent": "MyWeatherApp (benblagoev@gmail.com)"
+                }
+            })
+
+            if (!response.ok) {
+                console.error("Weather API did not work", response.status)
+                return;
+            }
+
+            const DataFromAPI = await response.json();
+            return DataFromAPI;
+        }
+    
+
+        function GetHourlyCards(DataHours, day) {
+            ContainerForMainHourly.innerHTML = ``
+            const start = day * 24;
+            const end = start + 24;
+            const dayTemps = DataHours.temperature_2m.slice(start, end);
+            const dayTimes = DataHours.time.slice(start, end);
+            const DayHumidities = DataHours.relative_humidity_2m.slice(start, end);
+
+            dayTemps.forEach((temp, index) => {
+                const rawTime = dayTimes[index + 1]
+                const dateObj = new Date(rawTime);
+                const DayTemp = dayTemps[index]
+                const DayHumidity = DayHumidities[index]
+
+                // Format to: "Sunday, 8:00 PM"
+                const formatted = dateObj.toLocaleString('en-US', {
+                    weekday: 'long',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                });
+
+                const ParentCard = document.createElement("div")
+                ParentCard.classList.add("Hourly")
+                ParentCard.innerHTML = `
+                    <div class="HourlyTime">
+                        ${formatted}
+                    </div>
+                    <div class="HourlyData">
+                        <div class="HourlyTemp">${DayTemp}°F</div>
+                        <div class="HourlyHumidity">${DayHumidity}% Humidity</div>
+                    </div>
+                `;      
+                ContainerForMainHourly.appendChild(ParentCard)
+
+
+            })
+        }
+
+        function GetDaysOfWeek(Data) {
+            console.log(Data)
+            const Days = Data.time
+            const Weather_code = Data.weather_code
+            Days.forEach((time, index) => {
+                const MaxTemp = Data.temperature_2m_max[index]
+                const MinTemp = Data.temperature_2m_min[index]
+                const WeatherCode = Weather_code[index]
+                const WeatherImage = wmo_to_map_icon[WeatherCode][3]
+                const dayName = new Date(time + "T00:00").toLocaleDateString('en-US', { weekday: 'long' });
+                const ParentCard = document.createElement("div")
+                ParentCard.classList.add("WeatherBlock")
+                ParentCard.id = "TestingWeather"
+               // Look for this inside GetDaysOfWeek
+                ParentCard.innerHTML = `
+                    <div class="WeatherTitle">
+                        ${dayName}
+                    </div>
+                    <div class="WeatherImage" style="--WeatherImage: url('${WeatherImage}')"></div>
+                    <div class="DailyStats">
+                        <span class="HighLow">${MaxTemp}° / ${MinTemp}°</span>
+                    </div>
+                    `;
+                ContainerForDays.appendChild(ParentCard)
+                ParentCard.addEventListener("click", () => {
+                    GetHourlyCards(DataHourly, index)
+                })
+            })
+        }
+
+        let latitude = 40.82071
+        let longitude = -74.63256
+        const WeatherLink = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code,relative_humidity_2m&current=weather_code,temperature_2m,relative_humidity_2m&timezone=auto&past_days=0&forecast_days=7&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch`;
+        let ForcastData = await GetJSON(WeatherLink);
+        GetDaysOfWeek(ForcastData.daily)
+        const DataHourly = ForcastData.hourly
+        GetHourlyCards(DataHourly, 0)
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,124 @@
+body {
+    background: radial-gradient(circle at top right, rgb(28, 61, 118), rgb(12, 20, 31));
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: white;
+}
+
+/* DAILY CONTAINER */
+.gridForWeatherStats {
+    display: flex;            /* Line them up in a row */
+    flex-wrap: nowrap;        /* Prevent them from dropping to a second line */
+    overflow-x: auto;         /* Enable the horizontal scrollbar */
+    overflow-y: hidden;       /* Prevent vertical jitter */
+    width: 100%;              /* Take up full screen width */
+    gap: 20px;
+    padding: 20px;
+    /* Optional: Custom scrollbar styling for a cleaner look */
+    position: sticky;
+    scrollbar-color: rgba(255,255,255,0.3) transparent;
+}
+
+.WeatherBlock {
+    flex: 0 0 200px;
+    height: 250px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px; /* Your rounded corners */
+    
+    overflow: hidden; 
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.WeatherBlock:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.WeatherTitle {
+    /* FIX 2: Remove the individual border-radius here */
+    border-radius: 0; 
+    
+    width: 100%;
+    padding: 12px 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    
+    /* FIX 3: Ensures text is centered */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.WeatherImage {
+    height: 80px;
+    width: 100%;
+    
+    margin-top: 10px;
+    background: var(--WeatherImage);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.DailyStats {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* HOURLY CONTAINER */
+.ContainerForMainWeather {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.Hourly {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.HourlyTime {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #00d4ff;
+}
+
+.HourlyData {
+    text-align: right;
+}
+
+.HourlyTemp {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.HourlyHumidity {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Hide scrollbar for cleaner look */
+.gridForWeatherStats::-webkit-scrollbar {
+    display: none;
+}
