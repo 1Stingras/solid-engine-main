@@ -7,13 +7,24 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="gridForWeatherStats" id = "DailyContainer">
-        
-    </div>
 
-    <div class="ContainerForMainWeather" id = "HourlyContainer">
-       
-    </div>
+    <header class="ml-dashboard-header">
+        <h1>SkyCast <span style="color: var(--accent)">Pro</span></h1>
+        <div class="prediction-card">
+            <h3 style="margin-top:0; font-size: 0.8rem; color: var(--accent);">ML SMART PREDICTION</h3>
+            <div id="ml-result">
+                <span style="font-size: 1.2rem;">Model Status: <span style="color: #4cd137;">Live</span></span>
+                <p style="margin: 10px 0 0 0; opacity: 0.7; font-size: 0.9rem;">
+                    Predicted Temp for next hour: <strong>--°F</strong>
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <div class="gridForWeatherStats" id="DailyContainer"></div>
+
+    <h2 style="padding-left: 20px; margin-top: 40px; font-weight: 300;">Hourly Details</h2>
+    <div class="ContainerForMainWeather" id="HourlyContainer"></div>
     
     <script type="module">
         const wmo_to_map_icon = {

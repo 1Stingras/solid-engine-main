@@ -1,126 +1,163 @@
+:root {
+    --glass: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --accent: #00d4ff;
+}
+
 body {
-    background: radial-gradient(circle at top right, rgb(28, 61, 118), rgb(12, 20, 31));
+    background: radial-gradient(circle at top right, #1e3d76, #0c141f);
     min-height: 100vh;
     margin: 0;
-    padding: 20px;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
     color: white;
-}
-
-/* DAILY CONTAINER */
-.gridForWeatherStats {
-    display: flex;            /* Line them up in a row */
-    flex-wrap: nowrap;        /* Prevent them from dropping to a second line */
-    overflow-x: auto;         /* Enable the horizontal scrollbar */
-    overflow-y: hidden;       /* Prevent vertical jitter */
-    width: 100%;              /* Take up full screen width */
-    gap: 20px;
-    padding: 20px;
-    /* Optional: Custom scrollbar styling for a cleaner look */
-    position: sticky;
-    top: 0;
-    scrollbar-color: rgba(255,255,255,0.3) transparent;
-}
-
-.WeatherBlock {
-    flex: 0 0 200px;
-    height: 250px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 25px; /* Your rounded corners */
-    
-    overflow: hidden; 
-    -webkit-backdrop-filter: blur(15px);
-    backdrop-filter: blur(15px);
     display: flex;
     flex-direction: column;
-    cursor: pointer;
-    transition: transform 0.3s ease;
+}
+
+/* Header & ML Template Area */
+.ml-dashboard-header {
+    padding: 30px;
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+    margin-bottom: 20px;
+}
+
+.prediction-card {
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 0, 0, 0.3));
+    border: 1px solid var(--accent);
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 400px;
+}
+
+/* DAILY CONTAINER (Horizontal Scroll) */
+.gridForWeatherStats {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 20px;
+    scrollbar-width: none; /* Firefox */
+}
+
+.gridForWeatherStats::-webkit-scrollbar { display: none; }
+
+.WeatherBlock {
+    flex: 0 0 180px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    transition: all 0.3s ease;
+    padding-bottom: 15px;
 }
 
 .WeatherBlock:hover {
-    transform: translateY(-10px);
-    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--accent);
 }
 
 .WeatherTitle {
-    /* FIX 2: Remove the individual border-radius here */
-    border-radius: 0; 
-    
-    width: 100%;
-    padding: 12px 0;
-    background-color: rgba(255, 255, 255, 0.1);
-    
-    /* FIX 3: Ensures text is centered */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    font-weight: bold;
-    font-size: 1.1rem;
+    padding: 15px;
+    text-align: center;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
 }
 
 .WeatherImage {
-    height: 80px;
-    width: 100%;
-    
-    margin-top: 10px;
+    height: 60px;
     background: var(--WeatherImage);
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    
 }
 
 .DailyStats {
-    margin-top: 15px;
-    font-weight: bold;
-    font-size: 1.2rem;
     text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
 }
 
 /* HOURLY CONTAINER */
 .ContainerForMainWeather {
-    display: flex;
-    flex-direction: column; 
-    align-items: flex-start; /* This pushes the children to the left */
-    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
     padding: 20px;
-    gap: 10px;
 }
 
 .Hourly {
-    width: 100%;             /* Let them take up the full width... */
-    max-width: 600px;        /* ...or set a specific width if you want them smaller */
-    margin: 0;               /* Remove '0 auto' which centers them */
-    
-    /* Ensure the content inside the card is also left-aligned */
-    display: flex;
-    justify-content: flex-start; 
-    gap: 20px;
+    background: var(--glass);
+    border-radius: 15px;
     padding: 15px;
-}
-.HourlyTime {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #00d4ff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid transparent;
 }
 
-.HourlyData {
-    text-align: right;
+.Hourly:hover {
+    border-left: 4px solid var(--accent);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.HourlyTime {
+    font-size: 1rem;
+    color: var(--accent);
 }
 
 .HourlyTemp {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
 }
 
-.HourlyHumidity {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.6);
+/* 1. Define the Animations */
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* Hide scrollbar for cleaner look */
-.gridForWeatherStats::-webkit-scrollbar {
-    display: none;
+@keyframes pulse-glow {
+    0% { box-shadow: 0 0 5px rgba(0, 212, 255, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.4); }
+    100% { box-shadow: 0 0 5px rgba(0, 212, 255, 0.2); }
+}
+
+/* 2. Apply to the ML Prediction Card */
+.prediction-card {
+    animation: pulse-glow 3s infinite ease-in-out;
+    /* Keeps the existing styles you have */
+}
+
+/* 3. Apply to Daily Weather Blocks (Staggered Fade-in) */
+.WeatherBlock {
+    animation: fadeInSlide 0.6s ease-out forwards;
+    opacity: 0; /* Starts invisible until animation kicks in */
+}
+
+/* This makes the cards pop in one by one instead of all at once */
+.WeatherBlock:nth-child(1) { animation-delay: 0.1s; }
+.WeatherBlock:nth-child(2) { animation-delay: 0.2s; }
+.WeatherBlock:nth-child(3) { animation-delay: 0.3s; }
+.WeatherBlock:nth-child(4) { animation-delay: 0.4s; }
+.WeatherBlock:nth-child(5) { animation-delay: 0.5s; }
+
+/* 4. Smooth Hover for Hourly Rows */
+.Hourly {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.Hourly:hover {
+    transform: scale(1.02);
+    padding-left: 25px; /* Subtle "slide" effect on hover */
 }
